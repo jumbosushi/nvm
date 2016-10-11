@@ -1,0 +1,18 @@
+#!/bin/sh
+
+die () { echo $@ ; exit 1; }
+
+. ../../../nvm.sh
+
+echo "v0.10.28" > .nvmrc
+OUTPUT="$(nvm use 2>&1 >/dev/null | awk 'NR==2')"
+EXPECTED_OUTPUT='N/A: version "v0.10.28" is not yet installed.'
+
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] \
+  || die "'nvm use' failed to display the .nvmrc version in the output (2nd line)"
+
+OUTPUT="$(nvm use 2>&1 >/dev/null | awk 'NR==4')"
+EXPECTED_OUTPUT='You need to run "nvm install v0.10.28" to install it before using it.'
+
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] \
+  || die "'nvm use' failed to display the .nvmrc version in the output (4th line)"
